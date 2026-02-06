@@ -16,8 +16,8 @@ import 'swiper/css/effect-fade';
 export interface Media {
     url: string;
     alt: string;
-    width: number;
-    height: number;
+    width?: number | null;
+    height?: number | null;
 }
 
 export interface HeroSlide {
@@ -84,7 +84,7 @@ export default function Hero({ heroSlides }: HeroProps) {
                     const isLocalAsset = imgUrl.startsWith('/') && !imgUrl.startsWith('/api/media');
                     const fullImgUrl = (imgUrl.startsWith('http') || isLocalAsset)
                         ? imgUrl
-                        : `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3001'}${imgUrl}`;
+                        : `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}${imgUrl}`;
 
                     return (
                         <SwiperSlide key={slide.id || index}>

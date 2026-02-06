@@ -1,9 +1,10 @@
 import Hero, { HeroSlide } from "@/components/home/Hero";
 import InsightsSection from "@/components/home/InsightsSection";
-import IntegrationSection from "@/components/home/IntegrationSection";
-import CapabilitiesSection from "@/components/common/CapabilitiesSection";
+import StatsSection from "@/components/home/StatsSection";
+import TabSection from "@/components/home/TabSection";
 import CompaniesSection from "@/components/home/CompaniesSection";
 import CTASection from "@/components/common/CTASection";
+import { getHomePageData, InsightsBlock, HomePageData, LayoutBlock, TabSectionBlock, StatsSectionBlock } from "@/lib/api";
 
 const mockHeroSlides: HeroSlide[] = [
   {
@@ -101,13 +102,35 @@ const mockCapabilities = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  let homeData: HomePageData | null = null;
+  let heroSlides = mockHeroSlides;
+  let insightsData: InsightsBlock | undefined;
+  let tabSectionData: TabSectionBlock | undefined;
+  let statsSectionData: StatsSectionBlock | undefined;
+
+  try {
+    homeData = await getHomePageData();
+
+    if (homeData) {
+      if (homeData.hero && homeData.hero.heroSlides) {
+        heroSlides = homeData.hero.heroSlides as unknown as HeroSlide[];
+      }
+
+      insightsData = homeData.layout?.find((block: LayoutBlock) => block.blockType === 'insightsSection') as InsightsBlock | undefined;
+      tabSectionData = homeData.layout?.find((block: LayoutBlock) => block.blockType === 'tabSection') as TabSectionBlock | undefined;
+      statsSectionData = homeData.layout?.find((block: LayoutBlock) => block.blockType === 'statsSection') as StatsSectionBlock | undefined;
+    }
+  } catch (error) {
+    console.error("Failed to load home page data, falling back to mocks", error);
+  }
+
   return (
     <>
-      <Hero heroSlides={mockHeroSlides} />
-      <InsightsSection />
-      <CapabilitiesSection capabilities={mockCapabilities} />
-      <IntegrationSection />
+      <Hero heroSlides={heroSlides} />
+      <InsightsSection data={insightsData} />
+      <TabSection data={tabSectionData} legacyCapabilities={mockCapabilities} />
+      <StatsSection data={statsSectionData} />
       <CompaniesSection />
       <CTASection />
     </>
