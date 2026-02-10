@@ -7,14 +7,14 @@ import { usePathname } from 'next/navigation';
 
 export default function Header() {
     const pathname = usePathname();
-    const isContactPage = pathname === '/contact';
+    const isLightPage = pathname === '/contact' || pathname === '/blog' || pathname === '/privacy-policy' || pathname === '/terms-of-service';
 
     return (
-        <header className={`absolute top-0 left-0 w-full z-50 border-b ${isContactPage ? 'border-gray-100' : 'border-white/10'}`}>
+        <header className={`absolute top-0 left-0 w-full z-50 border-b ${isLightPage ? 'border-gray-100' : 'border-white/10'}`}>
             <nav className="site-container flex items-center justify-between py-6">
                 <Link href="/" className="flex items-center">
                     <Image
-                        src={isContactPage ? "/Commerx-Logo-black.svg" : "/Commerx-Logo-Color.svg"}
+                        src={isLightPage ? "/Commerx-Logo-black.svg" : "/Commerx-Logo-Color.svg"}
                         alt="COMMERX"
                         width={180}
                         height={40}
