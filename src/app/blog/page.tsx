@@ -1,49 +1,17 @@
 "use client";
 
+import Link from 'next/link';
 import Image from 'next/image';
 import CTASection from '@/components/common/CTASection';
 import { useState } from 'react';
-
-// Dummy Data
-const BLOG_POSTS = [
-    {
-        id: 1,
-        title: "Integrating Marketing and IT: The Future of Intelligent Growth",
-        description: "Our journey is guided by a clear vision - is to be at the forefront of transformative solutions that shape to the industries and enrich lives. This vision is deeply rooted in our core values: excellence, innovation, integrity, and collaboration.",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
-        category: "Marketing",
-        link: "#"
-    },
-    {
-        id: 2,
-        title: "How IoT is Reshaping Enterprise Operations",
-        description: "Our journey is guided by a clear vision - is to be at the forefront of transformative solutions that shape to the industries and enrich lives. This vision is deeply rooted in our core values: excellence, innovation, integrity, and collaboration.",
-        image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop",
-        category: "IoT",
-        link: "#"
-    },
-    {
-        id: 3,
-        title: "Integrating Marketing and IT: The Future of Intelligent Growth",
-        description: "Our journey is guided by a clear vision - is to be at the forefront of transformative solutions that shape to the industries and enrich lives. This vision is deeply rooted in our core values: excellence, innovation, integrity, and collaboration.",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
-        category: "Telematics",
-        link: "#"
-    },
-    {
-        id: 4,
-        title: "How IoT is Reshaping Enterprise Operations",
-        description: "Our journey is guided by a clear vision - is to be at the forefront of transformative solutions that shape to the industries and enrich lives. This vision is deeply rooted in our core values: excellence, innovation, integrity, and collaboration.",
-        image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop",
-        category: "Tech",
-        link: "#"
-    }
-];
-
-const CATEGORIES = ["All", "Design", "IoT", "Tech", "Telematics", "Marketing"];
+import { BLOG_POSTS, CATEGORIES } from '@/lib/dummy-data';
 
 export default function BlogPage() {
     const [activeCategory, setActiveCategory] = useState("All");
+
+    const filteredPosts = activeCategory === "All"
+        ? BLOG_POSTS
+        : BLOG_POSTS.filter(post => post.category === activeCategory);
 
     return (
         <main className="min-h-screen bg-white relative overflow-hidden">
@@ -57,8 +25,18 @@ export default function BlogPage() {
                 />
             </div>
 
+            {/* Bottom Background Pattern */}
+            <div className="absolute top-[35%] -right-116 w-[800px] h-[900px] z-0 pointer-events-none rotate-180">
+                <Image
+                    src="/home-insight-sec-bg.svg"
+                    alt="Background Pattern"
+                    fill
+                    className="object-contain"
+                />
+            </div>
+
             {/* Hero Section */}
-            <section className="site-container pt-32 pb-16 text-center relative z-10">
+            <section className="site-container pt-40 pb-16 text-center relative z-10">
 
                 <div className="inline-block px-4 py-1.5 rounded-full bg-[#FFEAEB] text-[#D02030] text-[12px] font-bold tracking-wider uppercase mb-6">
                     Blog
@@ -68,7 +46,7 @@ export default function BlogPage() {
                     Explore our blog for expert knowledge and inspiration
                 </h1>
 
-                <p className="text-[16px] font-sans text-gray-600 max-w-2xl mx-auto">
+                <p className="text-[16px] font-sans text-black mx-auto">
                     Stay connected with us by subscribing to our blog updates, by doing so, you&apos;ll receive notifications whenever we publish new articles.
                 </p>
 
@@ -78,7 +56,7 @@ export default function BlogPage() {
                         <button
                             key={cat}
                             onClick={() => setActiveCategory(cat)}
-                            className={`px-6 py-2 rounded-full border transition-all text-sm md:text-base font-medium ${activeCategory === cat
+                            className={`px-6 py-2 rounded-full border transition-all text-[16px] md:text-[24px] cursor-pointer font-medium ${activeCategory === cat
                                 ? "bg-[#D02030] text-white border-[#D02030]"
                                 : "bg-white text-gray-600 border-gray-300 hover:border-gray-400"
                                 }`}
@@ -90,11 +68,11 @@ export default function BlogPage() {
             </section>
 
             {/* Blog Grid */}
-            <section className="site-container pb-32">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-                    {BLOG_POSTS.map((post) => (
-                        <article key={post.id} className="group cursor-pointer">
-                            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl mb-6">
+            <section className="site-container pb-32 relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
+                    {filteredPosts.map((post) => (
+                        <Link href={`/blog/${post.slug}`} key={post.id} className="block group cursor-pointer bg-[#F3F6FD] rounded-[8px] p-[24px]">
+                            <div className="relative aspect-video w-full overflow-hidden rounded-[4px] mb-6">
                                 <Image
                                     src={post.image}
                                     alt={post.title}
@@ -103,18 +81,18 @@ export default function BlogPage() {
                                 />
                             </div>
 
-                            <h2 className="text-2xl font-cal font-bold text-black mb-3 leading-tight group-hover:text-[#D02030] transition-colors">
+                            <h2 className="text-2xl font-cal text-black mb-3 leading-tight group-hover:text-[#D02030] transition-colors">
                                 {post.title}
                             </h2>
 
-                            <p className="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3">
+                            <p className="font-sans text-[14px] font-normal text-gray-600 mb-6 line-clamp-3">
                                 {post.description}
                             </p>
 
-                            <button className="px-5 py-2 rounded-full border border-gray-300 text-black text-sm font-medium transition-all hover:border-[#D02030] hover:text-[#D02030]">
+                            <button className="px-5 py-2 rounded-full border border-[#D02030] text-black text-[12px] cursor-pointer font-sans font-medium transition-all hover:bg-[#D02030] hover:text-white">
                                 Read Article
                             </button>
-                        </article>
+                        </Link>
                     ))}
                 </div>
             </section>
